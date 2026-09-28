@@ -17,7 +17,7 @@ jobs:
           echo "Target: ${{ github.base_ref }}"
 
           if [ $TARGET = "devel" ]; then
-            if [ ! $SOURCE =~ ^feature/ ]; then
+            if [[ ! $SOURCE =~ ^feature/ ]]; then
               echo "ERROR - Only feature/* branches can create PRs to devel"
               exit 1
             fi
