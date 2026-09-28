@@ -1,0 +1,35 @@
+name: Validate-source
+
+on:
+  pull_request:
+    branches: [ "devel","stage" ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Source Branch
+        run: |
+          SOURCE="${{ github.head_ref }}"
+          TARGET="${{ github.base_ref }}"
+          echo "Source: ${{ github.head_ref }}"
+          echo "Target: ${{ github.base_ref }}"
+
+          if [ $TARGET = "devel" ]; then
+            if [ ! $SOURCE =~ ^feature/ ]; then
+              echo "ERROR - Only feature/* branches can create PRs to devel"
+              exit 1
+            fi
+          fi
+            
+          if [ "$TARGET" = "stage" ]; then
+            if [ "$SOURCE" != "devel" ]; then
+              echo "ERROR - Only devel can create PRs to stage"
+              exit 1
+            fi
+          fi
+
+          echo "Branch policy passed"
+
+
